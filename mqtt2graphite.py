@@ -11,6 +11,7 @@ import time
 import socket
 import json
 import signal
+from pandas.io.json import json_normalize
 
 MQTT_HOST = os.environ.get('MQTT_HOST', '127.0.0.1')
 MQTT_PORT = int(os.environ.get('MQTT_PORT', 1883))
@@ -95,7 +96,7 @@ def on_message(mosq, userdata, msg):
                 '''JSON: try and load the JSON string from payload and use
                    subkeys to pass to Carbon'''
                 try:
-                    st = json.loads(msg.payload)
+                   st  = json_normalize(json.loads(msg.payload)) 
                     for k in st:
                         if is_number(st[k]):
                             lines.append("%s.%s %f %d" % (carbonkey, k, float(st[k]), now))
